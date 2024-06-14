@@ -34,3 +34,25 @@ type PointsResponse struct {
 
 var receiptStore = make(map[string]Receipt)
 var pointsStore = make(map[string]int)
+
+func processReceipt(w http.ResponseWriter, r *http.Request) {
+	var receipt Receipt
+	err := json.NewDecoder(r.Body).Decode(&receipt)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	id := uuid.New().String()
+	receiptStore[id] = receipt
+	pointsStore[id] = calculatePoints(receipt)
+
+	response := ProcessResponse{ID: id}
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(response)
+}
+
+func calculatePoints(
+
+	// write function here
+)
