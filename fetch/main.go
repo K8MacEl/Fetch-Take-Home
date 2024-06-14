@@ -52,7 +52,22 @@ func processReceipt(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(response)
 }
 
-func calculatePoints(
-
-	// write function here
-)
+func calculatePoints(receipt Receipt) int {
+	//start points at 0
+	points := 0
+	 //One point for every alphanumeric character in the retailer name
+	for _, char := range receipt.Retailer {
+		if ('a' <= char && char <= 'z') || ('A' <= char && char <= 'Z') || ('0' <= char && char <= '9') {
+			points++
+		} 
+	}
+	// 50 pints if the total is a round dollar amount with no cents
+	total, err := strconv.ParseFloat(receipt.Total, 64)
+	if err == nil && total == float64(int(total)) {
+		points += 50
+	}
+	//25 points if teh totla is a multiple of .25
+	if total*100 == float64(int(total*100)) && int(total*100)%25 == 0 {
+	points +=25
+	}
+}
